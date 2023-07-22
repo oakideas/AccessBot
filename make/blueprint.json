@@ -1,0 +1,333 @@
+{
+    "name": "AuthorizeUser",
+    "flow": [
+        {
+            "id": 1,
+            "module": "airtable:TriggerWatchRecords",
+            "version": 3,
+            "parameters": {
+                "base": "appy2bUjZZlQtO6PV",
+                "view": "",
+                "table": "tblceTQvBN86iAt9G",
+                "config": {
+                    "labelField": "cliente",
+                    "triggerField": "last_modified"
+                },
+                "formula": "",
+                "maxRecords": 10,
+                "__IMTCONN__": 1304400,
+                "useColumnId": false
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": -398,
+                    "y": -1
+                },
+                "restore": {
+                    "parameters": {
+                        "base": {
+                            "label": "Demo - Discord"
+                        },
+                        "view": {
+                            "label": "Empty"
+                        },
+                        "table": {
+                            "label": "Clientes"
+                        },
+                        "config": {
+                            "nested": {
+                                "labelField": {
+                                    "label": "cliente"
+                                },
+                                "triggerField": {
+                                    "label": "last_modified"
+                                }
+                            }
+                        },
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "airtable3"
+                            },
+                            "label": "Demo Discord (User ID: usrFNK3RorAWyr7Qe)"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:airtable3,airtable2",
+                        "label": "Connection",
+                        "required": true
+                    },
+                    {
+                        "name": "base",
+                        "type": "select",
+                        "label": "Base",
+                        "required": true
+                    },
+                    {
+                        "name": "useColumnId",
+                        "type": "boolean",
+                        "label": "Use Column ID",
+                        "required": true
+                    },
+                    {
+                        "name": "table",
+                        "type": "select",
+                        "label": "Table",
+                        "required": true
+                    },
+                    {
+                        "name": "config",
+                        "spec": [
+                            {
+                                "name": "triggerField",
+                                "type": "select",
+                                "label": "Trigger field",
+                                "required": true
+                            },
+                            {
+                                "name": "triggerField",
+                                "type": "hidden"
+                            },
+                            {
+                                "name": "labelField",
+                                "type": "select",
+                                "label": "Label field",
+                                "required": true
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Trigger configuration"
+                    },
+                    {
+                        "name": "maxRecords",
+                        "type": "integer",
+                        "label": "Limit",
+                        "required": true
+                    },
+                    {
+                        "name": "view",
+                        "type": "select",
+                        "label": "View"
+                    },
+                    {
+                        "name": "formula",
+                        "type": "text",
+                        "label": "Formula"
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "createdTime",
+                        "type": "date",
+                        "label": "Created Time"
+                    },
+                    {
+                        "name": "id",
+                        "type": "number",
+                        "label": "id"
+                    },
+                    {
+                        "name": "cliente",
+                        "type": "text",
+                        "label": "cliente"
+                    },
+                    {
+                        "name": "email",
+                        "type": "text",
+                        "label": "email"
+                    },
+                    {
+                        "name": "status",
+                        "type": "text",
+                        "label": "status"
+                    },
+                    {
+                        "name": "discord_customer_id",
+                        "type": "text",
+                        "label": "discord_customer_id"
+                    },
+                    {
+                        "name": "last_modified",
+                        "type": "date",
+                        "label": "last_modified"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 4,
+            "module": "builtin:BasicFeeder",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "array": [
+                    "{{1.id}}",
+                    "{{1.createdTime}}",
+                    "{{1.ID}}",
+                    "{{1.Cliente}}",
+                    "{{1.Email}}",
+                    "{{1.Status}}",
+                    "{{1.LastModified}}"
+                ]
+            },
+            "metadata": {
+                "designer": {
+                    "x": -101,
+                    "y": -19
+                },
+                "restore": {
+                    "expect": {
+                        "array": {
+                            "mode": "chose",
+                            "items": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                            ]
+                        }
+                    }
+                },
+                "expect": [
+                    {
+                        "mode": "edit",
+                        "name": "array",
+                        "spec": [],
+                        "type": "array",
+                        "label": "Array"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 5,
+            "module": "builtin:BasicRouter",
+            "version": 1,
+            "mapper": null,
+            "metadata": {
+                "designer": {
+                    "x": 212,
+                    "y": -30
+                }
+            },
+            "routes": [
+                {
+                    "flow": [
+                        {
+                            "id": 6,
+                            "module": "discord:RemoveGuildMemberRole",
+                            "version": 2,
+                            "parameters": {
+                                "__IMTCONN__": 1322043
+                            },
+                            "filter": {
+                                "name": "Inactive",
+                                "conditions": [
+                                    [
+                                        {
+                                            "a": "{{1.Status}}",
+                                            "b": "active",
+                                            "o": "text:notequal:ci"
+                                        },
+                                        {
+                                            "a": "{{1.discord_customer_id}}",
+                                            "b": "",
+                                            "o": "text:notequal"
+                                        }
+                                    ]
+                                ]
+                            },
+                            "mapper": {
+                                "roleId": "1080704303976685639",
+                                "userId": "{{1.discord_customer_id}}"
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 561,
+                                    "y": -34
+                                },
+                                "restore": {
+                                    "expect": {
+                                        "roleId": {
+                                            "mode": "chose",
+                                            "label": "Member"
+                                        }
+                                    },
+                                    "parameters": {
+                                        "__IMTCONN__": {
+                                            "data": {
+                                                "scoped": "undefined",
+                                                "connection": "undefined"
+                                            },
+                                            "label": "Discord Demo"
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "__IMTCONN__",
+                                        "type": "account:discord",
+                                        "label": "Connection",
+                                        "required": true
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "userId",
+                                        "type": "text",
+                                        "label": "User ID",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "roleId",
+                                        "type": "select",
+                                        "label": "Role ID",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "userId",
+                                        "type": "text",
+                                        "label": "User ID",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "roleId",
+                                        "type": "select",
+                                        "label": "Role ID",
+                                        "required": true
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "metadata": {
+        "instant": false,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false,
+            "freshVariables": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "us1.make.com"
+    }
+}
